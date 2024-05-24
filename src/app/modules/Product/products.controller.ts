@@ -38,10 +38,9 @@ const getAllProducts = async (req: Request, res: Response) => {
           data: result,
         });
       } else {
-        return res.status(200).json({
+        return res.status(400).json({
           success: false,
           message: `No matching product found for term '${searchTerm}'!`,
-          data: result,
         });
       }
     } catch (error: any) {
@@ -58,11 +57,18 @@ const getAllProducts = async (req: Request, res: Response) => {
   try {
     const result = await productService.getAllProducts();
 
-    res.status(200).json({
-      success: true,
-      message: "Products fetched successfully!",
-      data: result,
-    });
+    if (result?.length !== 0) {
+      res.status(200).json({
+        success: true,
+        message: "Products fetched successfully!",
+        data: result,
+      });
+    } else {
+      return res.status(400).json({
+        success: false,
+        message: `No product found!`,
+      });
+    }
   } catch (error: any) {
     console.error(error);
 
@@ -108,10 +114,9 @@ const getProductsById = async (req: Request, res: Response) => {
         data: result,
       });
     } else {
-      res.status(200).json({
-        success: true,
+      res.status(400).json({
+        success: false,
         message: `No product found for this id: ${productId}!`,
-        data: result,
       });
     }
   } catch (error: any) {

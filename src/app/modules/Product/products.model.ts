@@ -5,17 +5,26 @@ const ProductSchema = new mongoose.Schema<TProduct>({
   name: {
     type: String,
     trim: true,
+    required: [true, "Product name is required"],
+    maxlength: [30, "Name can not be more than 30 character"],
   },
   description: {
     type: String,
     trim: true,
   },
-  price: Number,
+  price: {
+    type: Number,
+    required: [true, "Product price is required"],
+    min: [1, "Price must be more than 0"],
+  },
   category: {
     type: String,
     trim: true,
+    required: [true, "Product category is required"],
   },
-  tags: [String],
+  tags: {
+    type: [String],
+  },
   variants: [
     {
       type: {
@@ -29,8 +38,14 @@ const ProductSchema = new mongoose.Schema<TProduct>({
     },
   ],
   inventory: {
-    quantity: Number,
-    inStock: Boolean,
+    quantity: {
+      type: Number,
+      required: [true, "Inventory quantity is required"],
+    },
+    inStock: {
+      type: Boolean,
+      required: [true, "Inventory stock status is required"],
+    },
   },
 });
 
