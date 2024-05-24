@@ -2,7 +2,7 @@ type TVarient = {
   type: string;
   value: string;
 };
-type TInventory = {
+export type TInventory = {
   quantity: number;
   inStock: boolean;
 };
