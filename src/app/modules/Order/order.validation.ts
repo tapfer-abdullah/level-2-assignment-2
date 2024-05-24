@@ -11,6 +11,11 @@ const orderValidationSchema = Joi.object({
     'string.base': 'Product ID should be a string',
     'any.required': 'Product ID is necessary to identify product',
   }),
+  price: Joi.number().min(1).required().messages({
+    'number.base': 'Quantity should be a number',
+    'number.min': 'Order price must be at least 1',
+    'any.required': 'Price is required for order',
+  }),
   quantity: Joi.number().min(1).required().messages({
     'number.base': 'Quantity should be a number',
     'number.min': 'Order quantity must be at least 1',

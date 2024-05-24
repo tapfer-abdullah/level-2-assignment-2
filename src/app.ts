@@ -20,4 +20,9 @@ app.use('/api/products', productRoute);
 // order route
 app.use('/api/orders', orderRouter);
 
+// for catching route not found
+app.use((req: Request, res: Response) => {
+  res.status(404).json({ success: false, message: 'Route not found' });
+});
+
 export default app;

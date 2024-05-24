@@ -10,6 +10,11 @@ export const orderSchema = new mongoose.Schema<TOrder>({
     type: String,
     required: [true, 'Email is necessary to identify product'],
   },
+  price: {
+    type: Number,
+    required: [true, 'Price is require for order'],
+    min: [1, 'Order price must be at least 1'],
+  },
   quantity: {
     type: Number,
     required: [true, 'Quantity is require for order'],
