@@ -1,12 +1,12 @@
-import mongoose, { model } from "mongoose";
-import { TProduct } from "./products.interface";
+import mongoose, { model } from 'mongoose';
+import { TProduct } from './products.interface';
 
 const ProductSchema = new mongoose.Schema<TProduct>({
   name: {
     type: String,
     trim: true,
-    required: [true, "Product name is required"],
-    maxlength: [30, "Name can not be more than 30 character"],
+    required: [true, 'Product name is required'],
+    maxlength: [30, 'Name can not be more than 30 character'],
   },
   description: {
     type: String,
@@ -14,13 +14,13 @@ const ProductSchema = new mongoose.Schema<TProduct>({
   },
   price: {
     type: Number,
-    required: [true, "Product price is required"],
-    min: [1, "Price must be more than 0"],
+    required: [true, 'Product price is required'],
+    min: [1, 'Price must be more than 0'],
   },
   category: {
     type: String,
     trim: true,
-    required: [true, "Product category is required"],
+    required: [true, 'Product category is required'],
   },
   tags: {
     type: [String],
@@ -40,15 +40,16 @@ const ProductSchema = new mongoose.Schema<TProduct>({
   inventory: {
     quantity: {
       type: Number,
-      required: [true, "Inventory quantity is required"],
+      required: [true, 'Inventory quantity is required'],
+      min: [0, 'Quantity can not be negative'],
     },
     inStock: {
       type: Boolean,
-      required: [true, "Inventory stock status is required"],
+      required: [true, 'Inventory stock status is required'],
     },
   },
 });
 
-const productModel = model<TProduct>("Products", ProductSchema);
+const productModel = model<TProduct>('Products', ProductSchema);
 
 export { productModel };

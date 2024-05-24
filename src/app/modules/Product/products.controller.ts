@@ -1,25 +1,40 @@
-import { Request, Response } from "express";
-import { productService } from "./products.service";
+import { Request, Response } from 'express';
+import { productService } from './products.service';
+import productValidationSchema from './products.validation';
 
 const createNewProduct = async (req: Request, res: Response) => {
   const data = req.body;
+
+  // validate using joi
+  const { error } = productValidationSchema.validate(data);
+
+  if (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'Validation error',
+      error: error.details,
+    });
+  }
 
   try {
     const result = await productService.addNewProductInBD(data);
 
     res.status(200).json({
       success: true,
-      message: "Product created successfully!",
+      message: 'Product created successfully!',
       data: result,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Unable to add product!",
-      error: error.message,
-    });
+    if (error instanceof Error) {
+      res.status(500).json({
+        success: false,
+        message: 'Unable to add product!',
+        error: error.message,
+      });
+    }
   }
 };
 
@@ -43,14 +58,15 @@ const getAllProducts = async (req: Request, res: Response) => {
           message: `No matching product found for term '${searchTerm}'!`,
         });
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
-
-      return res.status(500).json({
-        success: false,
-        message: `No matching product found for term '${searchTerm}'!`,
-        error: error.message,
-      });
+      if (error instanceof Error) {
+        return res.status(500).json({
+          success: false,
+          message: `No matching product found for term '${searchTerm}'!`,
+          error: error.message,
+        });
+      }
     }
   }
 
@@ -60,7 +76,7 @@ const getAllProducts = async (req: Request, res: Response) => {
     if (result?.length !== 0) {
       res.status(200).json({
         success: true,
-        message: "Products fetched successfully!",
+        message: 'Products fetched successfully!',
         data: result,
       });
     } else {
@@ -69,36 +85,55 @@ const getAllProducts = async (req: Request, res: Response) => {
         message: `No product found!`,
       });
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Unable to fetch products!",
-      error: error.message,
-    });
+    if (error instanceof Error) {
+      res.status(500).json({
+        success: false,
+        message: 'Unable to fetch products!',
+        error: error.message,
+      });
+    }
   }
 };
 
 const updateProductById = async (req: Request, res: Response) => {
   const { productId } = req.params;
   const updatedData = req.body;
+
+  // validate using joi
+  const { error } = productValidationSchema.validate(updatedData);
+
+  if (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+      message: 'Validation error',
+      error: error.details,
+    });
+  }
+
   try {
-    const result = await productService.updateProductsById(productId, updatedData);
+    const result = await productService.updateProductsById(
+      productId,
+      updatedData,
+    );
 
     res.status(200).json({
       success: true,
-      message: "Product updated successfully!",
+      message: 'Product updated successfully!',
       data: result,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Unable to updated product!",
-      error: error.message,
-    });
+    if (error instanceof Error) {
+      res.status(500).json({
+        success: false,
+        message: 'Unable to updated product!',
+        error: error.message,
+      });
+    }
   }
 };
 
@@ -110,7 +145,7 @@ const getProductsById = async (req: Request, res: Response) => {
     if (result) {
       res.status(200).json({
         success: true,
-        message: "Product fetched successfully!",
+        message: 'Product fetched successfully!',
         data: result,
       });
     } else {
@@ -119,14 +154,15 @@ const getProductsById = async (req: Request, res: Response) => {
         message: `No product found for this id: ${productId}!`,
       });
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Unable to fetch product!",
-      error: error.message,
-    });
+    if (error instanceof Error) {
+      res.status(500).json({
+        success: false,
+        message: 'Unable to fetch product!',
+        error: error.message,
+      });
+    }
   }
 };
 
@@ -137,17 +173,18 @@ const deleteProductsById = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: "Product deleted successfully!",
+      message: 'Product deleted successfully!',
       data: null,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-
-    res.status(500).json({
-      success: false,
-      message: "Unable to delete product!",
-      error: error.message,
-    });
+    if (error instanceof Error) {
+      res.status(500).json({
+        success: false,
+        message: 'Unable to delete product!',
+        error: error.message,
+      });
+    }
   }
 };
 
